@@ -1,0 +1,33 @@
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/underscore/underscore-min.js"></script>
+<script src="../node_modules/backbone/backbone-min.js"></script>
+<script src="../backbone.tendon.js"></script>
+<script src="../node_modules/backbone.marionette/lib/backbone.marionette.min.js"></script>
+
+<body></body>
+
+<script>
+  const GoButtonView = Marionette.ItemView.extend({
+    template: _.template('<button td="go">GO!</button>'),
+    el: 'body',
+    onClick: {
+      go() {
+        console.log('go');
+      },
+      any(e, $target, value, name) {
+        console.log('clicked', $target)
+      }
+    },
+    onBlur: {
+      name(e, $target, value) {
+        console.log(value);
+      },
+    },
+    initialize() {
+      this.tendon($); // pass jquery to get a $target instead if a target
+    },
+  });
+const goButton = new GoButtonView();
+goButton.render();
+</script>
+
