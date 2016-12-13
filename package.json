@@ -2,7 +2,7 @@
   "name": "backbone.tendon",
   "version": "0.0.2",
   "description": "An attempt to better event hashes",
-  "main": "backbone.tendon.js",
+  "main": "backbone.tendon.min.js",
   "directories": {
     "example": "example"
   },
