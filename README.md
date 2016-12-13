@@ -22,7 +22,7 @@ const GoButtonView = Marionette.ItemView.extend({
     },
   },
   initialize() {
-    this.tendon($); // pass jquery to get a $target instead if a target
+    this.tendon($); // pass jquery to get a jquery wrapped $target instead of a "native" target
   },
 });
 
