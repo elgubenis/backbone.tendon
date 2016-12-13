@@ -4,19 +4,21 @@ Backbone Tendon lets you define the events hash in a different manner.
 # example
 ```js
 const GoButtonView = Marionette.ItemView.extend({
-  template: _.template('<button td="go">GO!</button>'),
+  template: _.template('<button data-tendon="go" value="2">GO!</button>'),
   el: 'body',
   onClick: {
-    go() {
-      console.log('go');
+    go(value) {
+      console.log('go', 'value is', value);
     },
-    any(e, $target, value, name) {
-      console.log('clicked', $target)
+    any(value, e, $target, name) {
+      console.log('clicked', $target);
+      // name here is the data-tendon="" attributes value
     }
   },
   onBlur: {
-    name(e, $target, value) {
+    name(value, e, $target) {
       console.log(value);
+      console.log(e);
     },
   },
   initialize() {
