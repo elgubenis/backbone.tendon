@@ -29,27 +29,32 @@
   _.extend(Backbone.View.prototype, {
     tendon($) {
       if (!$) $ = (arg) => arg;
-      const html = this.template ? this.template() : '';
       const events = {};
 
       const attachEvent = (eventName) => {
         if (!eventName) return;
         const eventType = eventName.toLowerCase();
+     
         const actions = this[`on${eventName}`] || {};
+        const onEventName = `on${eventName}`;
+        const caller = this[onEventName];
+        
         for (let key of Object.keys(actions)) {
+          const keyCaller = caller[key];
           if (key === 'any') {
-            events[`${eventType} [td]`] = (e) => {
+            events[`${eventType} [data-tendon]`] = (e) => {
               const currentTarget = e.currentTarget;
-              this[`on${eventName}`][key].call(this, e, $(currentTarget), currentTarget.value, currentTarget.getAttribute('td'));
+              keyCaller.call(this, currentTarget.value, e, $(currentTarget), currentTarget.getAttribute('data-tendon'));
             };
-          } else if (html.indexOf(`td="${key}"`) > -1) {
-            events[`${eventType} [td="${key}"]`] = (e) => {
+          } else {
+            events[`${eventType} [data-tendon="${key}"]`] = (e) => {
               const currentTarget = e.currentTarget;
-              this[`on${eventName}`][key].call(this, e, $(currentTarget), currentTarget.value);
+              keyCaller.call(this, currentTarget.value, e, $(currentTarget));
             };
           }
         }
       };
+
       const self = this;
       _.invoke(eventNames, function (name) { attachEvent.call(self, this); });
       this.events = _.extend(this.events || {}, events);
