@@ -27,8 +27,8 @@
   ];
 
   _.extend(Backbone.View.prototype, {
-    tendon($) {
-      if (!$) $ = (arg) => arg;
+    tendon(jQueryWrapper) {
+      if (!jQueryWrapper) jQueryWrapper = (arg) => arg;
       const events = {};
 
       const attachEvent = (eventName) => {
@@ -44,12 +44,12 @@
           if (key === 'any') {
             events[`${eventType} [data-tendon]`] = (e) => {
               const currentTarget = e.currentTarget;
-              keyCaller.call(this, currentTarget.value, e, $(currentTarget), currentTarget.getAttribute('data-tendon'));
+              keyCaller.call(this, currentTarget.value, e, jQueryWrapper(currentTarget), currentTarget.getAttribute('data-tendon'));
             };
           } else {
             events[`${eventType} [data-tendon="${key}"]`] = (e) => {
               const currentTarget = e.currentTarget;
-              keyCaller.call(this, currentTarget.value, e, $(currentTarget));
+              keyCaller.call(this, currentTarget.value, e, jQueryWrapper(currentTarget));
             };
           }
         }
