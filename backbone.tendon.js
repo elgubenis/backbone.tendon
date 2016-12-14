@@ -46,14 +46,21 @@
         for (let tendon of Object.keys(tendons)) {
           // get the method by its name
           const tendonCaller = tendons[tendon];
+          const tendonEq = tendon === 'default' ? '' : `="${tendon}"`;
 
           // "click [data-tendon=hit]", do stuff
-          events[`${eventNS} [data-tendon="${tendon}"]`] = (e) => {
+          events[`${eventNS} [data-tendon${tendonEq}]`] = (e) => {
+            const currentTarget = e.currentTarget;
+            const name = currentTarget.getAttribute('data-tendon');
+
             return tendonCaller({
+              e,
               event: e,
-              value: e.currentTarget.value,
+              value: currentTarget.value,
+              name,
+              tendon: name,
               target: jQueryWrapper(e.target),
-              currentTarget: jQueryWrapper(e.currentTarget),
+              currentTarget: jQueryWrapper(currentTarget),
               relatedTarget: jQueryWrapper(e.relatedTarget),
               preventDefault: e.preventDefault,
               stopPropagation: e.stopPropagation,

@@ -7,16 +7,16 @@ const GoButtonView = Marionette.ItemView.extend({
   template: _.template('<button data-tendon="go" value="2">GO!</button>'),
   el: 'body',
   onClick: {
-    go(value) {
+    go({ value }) {
       console.log('go', 'value is', value);
     },
-    any(value, e, $target, name) {
+    any({ value, e, target, name }) {
       console.log('clicked', $target);
       // name here is the data-tendon="" attributes value
     }
   },
   onBlur: {
-    name(value, e, $target) {
+    name({ value, e, preventDefault }) {
       console.log(value);
       console.log(e);
     },
