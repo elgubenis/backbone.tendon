@@ -40,7 +40,7 @@
         const onEventName = `on${eventName}`;
 
         // methods in view's onClick object
-        const tendons = this[onEventName];
+        const tendons = this[onEventName] || {};
         
         // for every method in the onClick object
         for (let tendon of Object.keys(tendons)) {
