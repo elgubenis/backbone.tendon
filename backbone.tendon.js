@@ -48,7 +48,7 @@
           const tendonCaller = tendons[tendon];
 
           // "click [data-tendon=hit]", do stuff
-          events[`${eventNS} [data-tendon="${tendon}]`] = (e) => {
+          events[`${eventNS} [data-tendon="${tendon}"]`] = (e) => {
             return tendonCaller({
               event: e,
               value: e.currentTarget.value,
