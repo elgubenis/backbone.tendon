@@ -49,7 +49,7 @@
 
           // "click [data-tendon=hit]", do stuff
           events[`${eventNS} [data-tendon="${tendon}]`] = (e) => {
-            return keyCaller.call(this, {
+            return tendonCaller({
               event: e,
               value: e.currentTarget.value,
               target: jQueryWrapper(e.target),
@@ -64,7 +64,7 @@
       };
 
       // for every eventName, attach listeners
-      _.invoke(eventNames, (name) => attachHandler.call(this, name));
+      _.invoke(eventNames, function () { attachHandler(this); });
       this.delegateEvents(events);
     }
   });
