@@ -31,34 +31,41 @@
       if (!jQueryWrapper) jQueryWrapper = (arg) => arg;
       const events = {};
 
-      const attachEvent = (eventName) => {
-        if (!eventName) return;
-        const eventType = eventName.toLowerCase();
+      // eventName: Click
+      const attachHandler = (eventName) => {
+        // eventNS: click
+        const eventNS = eventName.toLowerCase();
      
-        const actions = this[`on${eventName}`] || {};
+        // onEventName: onClick
         const onEventName = `on${eventName}`;
-        const caller = this[onEventName];
+
+        // methods in view's onClick object
+        const tendons = this[onEventName];
         
-        for (let key of Object.keys(actions)) {
-          const keyCaller = caller[key];
-          if (key === 'any') {
-            events[`${eventType} [data-tendon]`] = (e) => {
-              const currentTarget = e.currentTarget;
-              keyCaller.call(this, currentTarget.value, e, jQueryWrapper(currentTarget), currentTarget.getAttribute('data-tendon'));
-            };
-          } else {
-            events[`${eventType} [data-tendon="${key}"]`] = (e) => {
-              const currentTarget = e.currentTarget;
-              keyCaller.call(this, currentTarget.value, e, jQueryWrapper(currentTarget));
-            };
+        // for every method in the onClick object
+        for (let tendon of Object.keys(tendons)) {
+          // get the method by its name
+          const tendonCaller = tendons[tendon];
+
+          // "click [data-tendon=hit]", do stuff
+          events[`${eventNS} [data-tendon="${tendon}]`] = (e) => {
+            return keyCaller.call(this, {
+              event: e,
+              value: e.currentTarget.value,
+              target: jQueryWrapper(e.target),
+              currentTarget: jQueryWrapper(e.currentTarget),
+              relatedTarget: jQueryWrapper(e.relatedTarget),
+              preventDefault: e.preventDefault,
+              stopPropagation: e.stopPropagation,
+              stopImmediatePropagation: e.stopImmediatePropagation,
+            });
           }
         }
       };
 
-      const self = this;
-      _.invoke(eventNames, function (name) { attachEvent.call(self, this); });
-      this.events = _.extend(this.events || {}, events);
-      this.delegateEvents();
+      // for every eventName, attach listeners
+      _.invoke(eventNames, (name) => attachHandler.call(this, name));
+      this.delegateEvents(events);
     }
   });
 
