@@ -1,17 +1,18 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['backbone', 'underscore'], function(Backbone, _) {
-      return factory(Backbone, _);
+    define(['backbone', 'underscore', 'jquery'], function(Backbone, _) {
+      return factory(Backbone, _, $);
     });
   }
   else if (typeof exports !== 'undefined') {
     var Backbone = require('backbone');
     var _ = require('underscore');
-    module.exports = factory(Backbone, _);
+    var $ = require('jquery');
+    module.exports = factory(Backbone, _, $);
   } else {
-    factory(root.Backbone, root._);
+    factory(root.Backbone, root._, root.$);
   }
-}(this, function(Backbone, _) {
+}(this, function(Backbone, _, jQueryWrapper) {
   'use strict';
 
   const eventNames = [
@@ -26,9 +27,13 @@
     'TouchStart', 'TouchEnd', 'TouchMove', 'TouchEnter', 'TouchLeave', 'TouchCancel', // touch
   ];
 
+  const delegateEvents = Backbone.View.prototype.delegateEvents;
+
   _.extend(Backbone.View.prototype, {
-    tendon(jQueryWrapper) {
-      if (!jQueryWrapper) jQueryWrapper = (arg) => arg;
+    delegateEvents(events) {
+      return delegateEvents.call(this, Object.assign(events, this.tendon()));
+    },
+    tendon() {
       const events = {};
 
       // eventName: Click
@@ -72,7 +77,7 @@
 
       // for every eventName, attach listeners
       _.invoke(eventNames, function () { attachHandler(this); });
-      this.delegateEvents(events);
+      return events;
     }
   });
 
