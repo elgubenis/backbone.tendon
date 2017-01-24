@@ -31,7 +31,7 @@
 
   _.extend(Backbone.View.prototype, {
     delegateEvents(events) {
-      return delegateEvents.call(this, Object.assign(events, this.tendon()));
+      return delegateEvents.call(this, Object.assign(events || {}, this.tendon.call(this)));
     },
     tendon() {
       const events = {};
@@ -58,7 +58,7 @@
             const currentTarget = e.currentTarget;
             const name = currentTarget.getAttribute('data-tendon');
 
-            return tendonCaller({
+            return tendonCaller.call(this, {
               e,
               event: e,
               value: currentTarget.value,
